@@ -24,6 +24,24 @@
         tools:layout="@layout/fragment_slideshow" />
 
     <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.yhz.my_book_collection.ui.profile.ProfileFragment"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/nav_login"
+        android:name="com.yhz.my_book_collection.ui.login.LoginFragment"
+        android:label="@string/menu_login"
+        tools:layout="@layout/fragment_login" />
+
+    <fragment
+        android:id="@+id/nav_register"
+        android:name="com.yhz.my_book_collection.ui.register.RegisterFragment"
+        android:label="@string/menu_register"
+        tools:layout="@layout/fragment_register" />
+
+    <fragment
         android:id="@+id/nav_settings"
         android:name="com.yhz.my_book_collection.ui.settings.SettingsFragment"
         android:label="@string/menu_settings"

@@ -10,7 +10,20 @@
     <string name="menu_transform">Transform</string>
     <string name="menu_reflow">Reflow</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_login">Login</string>
+    <string name="menu_register">Register</string>
     <string name="menu_settings">Settings</string>
+
+    <!-- Login/Register strings -->
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login_button">Login</string>
+    <string name="register_button">Register</string>
+    <string name="register_link">Don\'t have an account? Register here</string>
+    <string name="login_link">Already have an account? Login here</string>
+    <string name="logout">Logout</string>
+    <string name="profile_title">Profile</string>
 
     <string name="lorem_ipsum_title">Lorem Ipsum"</string>
     <string name="lorem_ipsum">Lorem Ipsum is simply placeholder text of the printing and

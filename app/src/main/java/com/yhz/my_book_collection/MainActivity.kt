@@ -1,5 +1,7 @@
 package com.yhz.my_book_collection
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -12,12 +14,16 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.yhz.my_book_collection.databinding.ActivityMainBinding
+import com.yhz.my_book_collection.ui.login.LoginActivity
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,12 +39,12 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment =
             (supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment?)!!
-        val navController = navHostFragment.navController
+        navController = navHostFragment.navController
 
         binding.navView?.let {
             appBarConfiguration = AppBarConfiguration(
                 setOf(
-                    R.id.nav_transform, R.id.nav_reflow, R.id.nav_slideshow, R.id.nav_settings
+                    R.id.nav_transform, R.id.nav_reflow, R.id.nav_slideshow, R.id.nav_profile, R.id.nav_settings
                 ),
                 binding.drawerLayout
             )
@@ -46,14 +52,38 @@ class MainActivity : AppCompatActivity() {
             it.setupWithNavController(navController)
         }
 
-        binding.appBarMain.contentMain.bottomNavView?.let {
+        binding.appBarMain.contentMain.bottomNavView?.let { bottomNav ->
             appBarConfiguration = AppBarConfiguration(
                 setOf(
-                    R.id.nav_transform, R.id.nav_reflow, R.id.nav_slideshow
+                    R.id.nav_transform, R.id.nav_reflow, R.id.nav_slideshow, R.id.nav_profile
                 )
             )
             setupActionBarWithNavController(navController, appBarConfiguration)
-            it.setupWithNavController(navController)
+
+            // Custom navigation listener for profile login check
+            bottomNav.setOnItemSelectedListener { item ->
+                when (item.itemId) {
+                    R.id.nav_profile -> {
+                        handleProfileNavigation()
+                        true
+                    }
+                    else -> {
+                        navController.navigate(item.itemId)
+                        true
+                    }
+                }
+            }
+        }
+    }
+
+    private fun handleProfileNavigation() {
+        val sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val isLoggedIn = sharedPreferences.getBoolean("is_logged_in", false)
+
+        if (isLoggedIn) {
+            navController.navigate(R.id.nav_profile)
+        } else {
+            navController.navigate(R.id.nav_login)
         }
     }
 
@@ -75,6 +105,11 @@ class MainActivity : AppCompatActivity() {
             R.id.nav_settings -> {
                 val navController = findNavController(R.id.nav_host_fragment_content_main)
                 navController.navigate(R.id.nav_settings)
+            }
+            R.id.nav_login -> {
+                // Navigate to LoginActivity
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
             }
         }
         return super.onOptionsItemSelected(item)
