@@ -1,64 +1,60 @@
 package com.yhz.my_book_collection.ui.profile
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import com.yhz.my_book_collection.R
+import androidx.lifecycle.ViewModelProvider
 import com.yhz.my_book_collection.databinding.FragmentProfileBinding
 
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
-    private lateinit var sharedPreferences: SharedPreferences
+
+    private lateinit var profileViewModel: ProfileViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
+
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
-        return binding.root
+        val root: View = binding.root
+
+        setupClickListeners()
+        observeViewModel()
+
+        return root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        sharedPreferences = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-
-        // Check if user is logged in
-        val isLoggedIn = sharedPreferences.getBoolean("is_logged_in", false)
-
-        if (!isLoggedIn) {
-            // Navigate to login if not logged in
-            findNavController().navigate(R.id.nav_login)
-            return
+    private fun setupClickListeners() {
+        binding.btnEditProfile.setOnClickListener {
+            // TODO: Navigate to edit profile screen
         }
 
-        // Display user information
-        val userEmail = sharedPreferences.getString("user_email", "")
-        binding.textUserEmail.text = userEmail
+        binding.btnExportData.setOnClickListener {
+            // TODO: Implement export functionality
+        }
 
-        // Setup logout button
-        binding.buttonLogout.setOnClickListener {
-            logout()
+        binding.btnAbout.setOnClickListener {
+            // TODO: Show about dialog
         }
     }
 
-    private fun logout() {
-        with(sharedPreferences.edit()) {
-            putBoolean("is_logged_in", false)
-            remove("user_email")
-            apply()
+    private fun observeViewModel() {
+        profileViewModel.username.observe(viewLifecycleOwner) { username ->
+            binding.textViewUsername.text = username
         }
 
-        // Navigate to login after logout
-        findNavController().navigate(R.id.nav_login)
+        profileViewModel.userEmail.observe(viewLifecycleOwner) { email ->
+            binding.textViewUserEmail.text = email
+        }
+
+        // TODO: Observe reading statistics
     }
 
     override fun onDestroyView() {
